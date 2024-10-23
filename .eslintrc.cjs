@@ -9,7 +9,7 @@ module.exports = {
     "htmlacademy/react-typescript",
   ],
   parser: '@typescript-eslint/parser',
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module', project: 'tsconfig.json' },
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module', project: './tsconfig.json', tsconfigRootDir: __dirname},
   settings: { react: { version: 'detect' } },
   plugins: ['react-refresh'],
   rules: {

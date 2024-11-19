@@ -2,7 +2,7 @@
  * Компонент страницы авторизации
  * Отображает форму входа и список доступных городов
  *
- * @kind component
+ * @kind page
  */
 const LoginPage = () => (
   <div className="page page--gray page--login">

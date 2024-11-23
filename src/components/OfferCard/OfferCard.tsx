@@ -1,4 +1,4 @@
-import { BaseCard } from '@components/BaseCard/BaseCard';
+import { BaseCard, BaseCardProps } from '@components/BaseCard/BaseCard';
 
 /**
  * Тип данных предложения
@@ -20,15 +20,21 @@ export type Offer = {
   isFavorite: boolean;
   /** Город, в котором находится предложение */
   city: string;
+  /** Координаты расположения предложения */
+  location: {
+    /** Широта */
+    latitude: number;
+    /** Долгота */
+    longitude: number;
+    /** Зум */
+    zoom: number;
+  };
 }
 
 /**
  * Пропсы компонента OfferCard
  */
-interface OfferCardProps {
-  /** Объект предложения */
-  offer: Offer;
-}
+type OfferCardProps = Pick<BaseCardProps, 'onCardHover' | 'offer'>;
 
 /**
  * Компонент карточки предложения
@@ -36,9 +42,9 @@ interface OfferCardProps {
  *
  * @kind component
  */
-const OfferCard = ({ offer }: OfferCardProps) => (
+const OfferCard = (props: OfferCardProps) => (
   <BaseCard
-    offer={offer}
+    {...props}
     imageWrapperClassName="cities__image-wrapper"
     imageSize={{ width: 260, height: 200 }}
     cardClassName="cities__card"

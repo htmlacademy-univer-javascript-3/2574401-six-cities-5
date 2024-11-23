@@ -23,6 +23,7 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@mocks/*": ["src/mocks/*"],
       "@pages/*": ["src/pages/*"]
     }
   },

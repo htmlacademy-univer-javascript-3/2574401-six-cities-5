@@ -7,7 +7,6 @@ import { ActivePin } from './icons/ActivePin';
 import 'leaflet/dist/leaflet.css';
 import ReactDOMServer from 'react-dom/server';
 import { DEFAULT_PADDING } from './lib/constants';
-
 /**
  * Пропсы для компонента карты
  */
@@ -17,9 +16,11 @@ type MapProps = {
   /** Точки на карте */
   points: MapPoint[];
   /** Выбранная точка на карте */
-  selectedPoint: MapPoint | null;
+  selectedPoint?: MapPoint | null;
   /** Дополнительные CSS классы для карты */
   className?: string;
+  /** Флаг, указывающий, заполнен ли контейнер карты */
+  isFulfilledContainer?: boolean;
 };
 
 /**
@@ -48,7 +49,7 @@ const currentCustomIcon = new Icon({
  * @param props - Пропсы компонента
  * @returns JSX элемент
  */
-function Map({ city, points, selectedPoint, className }: MapProps): JSX.Element {
+function Map({ city, points, selectedPoint, className, isFulfilledContainer }: MapProps): JSX.Element {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
@@ -65,7 +66,7 @@ function Map({ city, points, selectedPoint, className }: MapProps): JSX.Element 
 
         marker
           .setIcon(
-            selectedPoint !== null && point.id === selectedPoint.id
+            selectedPoint && point.id === selectedPoint.id
               ? currentCustomIcon
               : defaultCustomIcon
           )
@@ -82,7 +83,7 @@ function Map({ city, points, selectedPoint, className }: MapProps): JSX.Element 
     }
   }, [map, points, selectedPoint]);
 
-  return <div className={`map ${className}`} ref={mapRef} style={{ height: '100%', width: '100%' }}></div>;
+  return <div className={`map ${className}`} ref={mapRef} style={isFulfilledContainer ? { height: '100%', width: '100%' } : {}}></div>;
 }
 
 export default Map;

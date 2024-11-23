@@ -6,6 +6,7 @@ import FavoritesPage from '@pages/FavoritesPage/FavoritesPage';
 import OfferPage from '@pages/OfferPage/OfferPage';
 import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import PrivateRoute from '@components/PrivateRoute/PrivateRoute';
+import { Review } from '@components/Review/types';
 
 /**
  * Интерфейс для пропсов компонента App
@@ -15,6 +16,10 @@ interface AppProps {
    * Массив предложений для отображения
    */
   offers: Offer[];
+  /**
+   * Массив отзывов для отображения
+   */
+  reviews: Review[];
 }
 
 /**
@@ -23,7 +28,7 @@ interface AppProps {
  *
  * @returns - Приложение
  */
-export const App = ({offers}: AppProps) => (
+export const App = ({offers, reviews}: AppProps) => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<MainPage offers={offers} />} />
@@ -34,7 +39,7 @@ export const App = ({offers}: AppProps) => (
         </PrivateRoute>
       }
       />
-      <Route path="/offer/:id" element={<OfferPage />} />
+      <Route path="/offer/:id" element={<OfferPage reviews={reviews} offers={offers} />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </BrowserRouter>

@@ -1,9 +1,10 @@
 import { Review } from '@components/Review/types';
 import ReviewList from '@components/ReviewList/ReviewList';
 import Map from '@components/Map/Map';
-import { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
 import NearPlacesList from '@components/NearPlacesList/NearPlacesList';
 import { useMapHover } from '@components/Map/hooks/useMapHover';
+import { City } from '@components/Map/lib/types';
 
 type OfferPageProps = {
   reviews: Review[];
@@ -21,12 +22,12 @@ const OfferPage = ({reviews, offers}: OfferPageProps) => {
   const currentOffer = offers[0];
 
   // Подготавливаем город для карты
-  const city = {
-    name: currentOffer.city,
+  const city: City = {
+    name: currentOffer.city.name,
     location: {
       latitude: currentOffer.location.latitude,
       longitude: currentOffer.location.longitude,
-      zoom: currentOffer.location.zoom
+      zoom: currentOffer.city.location.zoom
     }
   };
 

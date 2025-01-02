@@ -1,4 +1,5 @@
-import OfferCard, { Offer } from '../OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
+import OfferCard from '../OfferCard/OfferCard';
 
 /**
  * Пропсы компонента OfferList

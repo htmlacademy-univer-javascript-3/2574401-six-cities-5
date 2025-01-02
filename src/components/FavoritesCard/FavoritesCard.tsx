@@ -1,6 +1,5 @@
 import { BaseCard } from '@components/BaseCard/BaseCard';
-import type { Offer } from '@components/OfferCard/OfferCard';
-
+import { Offer } from 'src/types/offer';
 /**
  * Интерфейс пропсов компонента FavoritesCard
  */

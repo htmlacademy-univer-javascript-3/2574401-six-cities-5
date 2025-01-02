@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
 import { FavoritesCard } from '../FavoritesCard/FavoritesCard';
 
 /**
@@ -25,11 +25,11 @@ const FavoritesList = ({ offers }: FavoritesListProps) => {
   const groupedOffers = offers.reduce<GroupedOffers>((acc, offer) => {
     const { city } = offer;
 
-    if (!acc[city]) {
-      acc[city] = [];
+    if (!acc[city.name]) {
+      acc[city.name] = [];
     }
 
-    acc[city].push(offer);
+    acc[city.name].push(offer);
 
     return acc;
   }, {});

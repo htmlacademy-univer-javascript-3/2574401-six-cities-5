@@ -1,25 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import App from './App';
-import { offers } from './mocks/offers';
-import { reviews } from './mocks/reviews';
 import { store } from './store';
-import { loadOffers } from './store/slices/app';
-import { CITIES } from './mocks/cities';
-import { changeCity } from './store/slices/app';
+import App from './App';
+import React from 'react';
 
-// Устанавливаем начальный город
-store.dispatch(changeCity(CITIES[0]));
+const root = createRoot(document.getElementById('root') as HTMLElement);
 
-// Загружаем начальные данные в store
-store.dispatch(loadOffers(offers));
-
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App offers={offers} reviews={reviews}/>
+      <App />
     </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

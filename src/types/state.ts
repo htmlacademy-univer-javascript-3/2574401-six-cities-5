@@ -1,24 +1,48 @@
 import { SortType } from '@components/SortOptions/types';
 import { store } from '../store';
-import { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from './offer';
 
-export interface City {
+/** Местоположение */
+export type Location = {
+  /** Широта */
+  latitude: number;
+  /** Долгота */
+  longitude: number;
+  /** Масштаб карты */
+  zoom: number;
+};
+
+/** Город */
+export type City = {
   name: string;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
+  location: Location;
+};
+
+/** Состояние приложения */
+export interface AppState {
+  city: City | null;
+  sortType: SortType;
+  cities: City[];
+}
+
+/** Корневое состояние */
+export interface State {
+  /** Состояние предложений */
+  offers: {
+    offers: Offer[];
+    isLoading: boolean;
+    error: string | null;
+  };
+  /** Состояние приложения */
+  app: AppState;
+  /** Состояние данных */
+  data: {
+    offers: Offer[];
+    favorites: Offer[];
+    isLoading: boolean;
+    error: string | null;
   };
 }
 
-export interface AppState {
-  city: City | null;
-  offers: Offer[];
-  sortType: SortType;
-}
-
-export interface State {
-  app: AppState;
-}
-
+/** Тип для dispatch */
 export type AppDispatch = typeof store.dispatch;

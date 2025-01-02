@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
 import { MapPoint } from '@components/Map/lib/types';
 
 /**

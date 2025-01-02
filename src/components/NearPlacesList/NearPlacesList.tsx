@@ -1,4 +1,4 @@
-import { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
 import NearPlaceCard from '@components/NearPlaceCard/NearPlaceCard';
 
 interface NearPlacesListProps {

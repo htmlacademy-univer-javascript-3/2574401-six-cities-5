@@ -4,7 +4,7 @@ import type { Offer } from '@components/OfferCard/OfferCard';
 /**
  * Пропсы базового компонента карточки
  */
-interface BaseCardProps {
+export interface BaseCardProps {
   /** Объект предложения */
   offer: Offer;
   /** Дополнительные CSS классы для обертки изображения */
@@ -17,7 +17,7 @@ interface BaseCardProps {
   /** Дополнительные CSS классы для карточки */
   cardClassName: string;
   /** Обработчик наведения на карточку */
-  onCardHover?: (offerId: number | null) => void;
+  onCardHover?: (offer: Offer | null) => void;
 }
 
 /**
@@ -35,7 +35,7 @@ export const BaseCard = ({
 }: BaseCardProps) => {
 
   const handleMouseEnter = () => {
-    onCardHover?.(offer.id);
+    onCardHover?.(offer);
   };
 
   const handleMouseLeave = () => {

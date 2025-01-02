@@ -1,22 +1,38 @@
-import { Offer } from '@components/OfferCard/OfferCard';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import FavoritesList from '@components/FavoritesList/FavoritesList';
+import { Spinner } from '@components/Spinner/Spinner';
+import { fetchFavorites, selectFavorites } from '@/store/slices/data';
+import { RootState } from '@/store/root-reducer';
 
-/**
- * Интерфейс пропсов компонента FavoritesPage
- */
-interface FavoritesPageProps {
-  /** Массив предложений */
-  offers: Offer[];
-}
 
 /**
  * Компонент страницы избранного
  * Отображает список избранных предложений
- *
- * @kind page
  */
-const FavoritesPage = ({ offers }: FavoritesPageProps) => {
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+const FavoritesPage = () => {
+  const dispatch = useAppDispatch();
+  const favorites = useAppSelector(selectFavorites);
+  const { isLoading, error } = useAppSelector((state: RootState) => state.data);
+
+  useEffect(() => {
+    dispatch(fetchFavorites());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <div className="page">
+        <div className="error-container">
+          <h2>Произошла ошибка</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -42,7 +58,7 @@ const FavoritesPage = ({ offers }: FavoritesPageProps) => {
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{favorites.length}</span>
                   </a>
                 </li>
                 <li className="header__nav-item">
@@ -60,7 +76,7 @@ const FavoritesPage = ({ offers }: FavoritesPageProps) => {
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <FavoritesList offers={favoriteOffers} />
+            <FavoritesList offers={favorites} />
           </section>
         </div>
       </main>

@@ -1,33 +1,17 @@
-import { City } from '../../types/state';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { changeCity, selectCity } from '../../store/slices/app';
+import { City } from '@/types/state';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { changeCity, selectCity, selectCities } from '@/store/slices/app';
 import cn from 'classnames';
 
 /**
- * Пропсы для компонента списка городов
- * @interface CityListProps
- * @property cities - Массив городов для отображения
- */
-interface CityListProps {
-  cities: City[];
-}
-
-/**
  * Компонент списка городов
- * Отображает список доступных городов и позволяет выбрать активный город
- *
- * @component
- * @param props - Пропсы компонента
- * @returns Отрендеренный компонент списка городов
+ * Отображает список доступных городов из API и позволяет выбрать активный город
  */
-const CityList = ({ cities }: CityListProps): JSX.Element => {
+const CityList = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const activeCity = useAppSelector(selectCity);
+  const cities = useAppSelector(selectCities);
 
-  /**
-   * Обработчик клика по городу
-   * @param city - Выбранный город
-   */
   const handleCityClick = (city: City) => {
     dispatch(changeCity(city));
   };

@@ -1,52 +1,19 @@
-import { BaseCard, BaseCardProps } from '@components/BaseCard/BaseCard';
+import { BaseCard } from '@components/BaseCard/BaseCard';
+import { Offer } from 'src/types/offer';
 
-/**
- * Тип данных предложения
- */
-export type Offer = {
-  /** Идентификатор предложения */
-  id: number;
-  /** URL изображения предложения */
-  image: string;
-  /** Цена предложения */
-  price: number;
-  /** Название предложения */
-  name: string;
-  /** Тип предложения */
-  type: string;
-  /** Флаг, указывающий, является ли предложение премиумом */
-  isPremium: boolean;
-  /** Флаг, указывающий, является ли предложение избранным */
-  isFavorite: boolean;
-  /** Город, в котором находится предложение */
-  city: string;
-  /** Координаты расположения предложения */
-  location: {
-    /** Широта */
-    latitude: number;
-    /** Долгота */
-    longitude: number;
-    /** Зум */
-    zoom: number;
-  };
-  /** Рейтинг предложения */
-  rating: number;
-}
-
-/**
- * Пропсы компонента OfferCard
- */
-type OfferCardProps = Pick<BaseCardProps, 'onCardHover' | 'offer'>;
+type OfferCardProps = {
+  offer: Offer;
+  onCardHover?: (offer: Offer | null) => void;
+};
 
 /**
  * Компонент карточки предложения
  * Отображает информацию о предложении, включая изображение, цену, название и тип
- *
- * @kind component
  */
-const OfferCard = (props: OfferCardProps) => (
+const OfferCard = ({ offer, onCardHover }: OfferCardProps) => (
   <BaseCard
-    {...props}
+    offer={offer}
+    onCardHover={onCardHover}
     imageWrapperClassName="cities__image-wrapper"
     imageSize={{ width: 260, height: 200 }}
     cardClassName="cities__card"

@@ -1,7 +1,6 @@
 import Map from '../../components/Map/Map';
 import OfferList from '@components/OfferList/OfferList';
 import { useMapHover } from '@components/Map/hooks/useMapHover';
-import { CITIES } from '../../mocks/cities';
 import CityList from '@components/CityList/CityList';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { selectCity, selectFilteredOffers, selectSortType, changeSortType } from '../../store/slices/app';
@@ -29,6 +28,10 @@ const MainPage = () => {
       longitude: offer.location.longitude
     }
   })), [filteredOffers]);
+
+  const handleSortChange = (sort: SortType) => {
+    dispatch(changeSortType(sort));
+  };
 
   if (!city) {
     return null; // или показать лоадер/заглушку
@@ -67,7 +70,7 @@ const MainPage = () => {
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <CityList cities={CITIES} />
+          <CityList />
         </div>
         <div className="cities">
           <div className="cities__places-container container">
@@ -76,7 +79,7 @@ const MainPage = () => {
               <b className="places__found">{filteredOffers.length} places to stay in {city.name}</b>
               <SortOptions
                 currentSort={sortType}
-                onSortChange={(sort: SortType) => dispatch(changeSortType(sort))}
+                onSortChange={handleSortChange}
               />
               <OfferList
                 offers={filteredOffers}

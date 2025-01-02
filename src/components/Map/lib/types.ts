@@ -20,6 +20,6 @@ export type City = {
  * Тип, описывающий точку на карте с идентификатором и местоположением
  */
 export type MapPoint = {
-  id: number;
+  id: string;
   location: Location;
 };

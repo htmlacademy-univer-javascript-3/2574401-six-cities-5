@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import type { Offer } from '@components/OfferCard/OfferCard';
+import { Offer } from 'src/types/offer';
+
 
 /**
  * Пропсы базового компонента карточки
@@ -22,9 +23,6 @@ export interface BaseCardProps {
 
 /**
  * Базовый компонент карточки предложения
- * Содержит общую структуру и функциональность для всех типов карточек
- *
- * @kind component
  */
 export const BaseCard = ({
   offer,
@@ -33,7 +31,6 @@ export const BaseCard = ({
   cardClassName,
   onCardHover
 }: BaseCardProps) => {
-
   const handleMouseEnter = () => {
     onCardHover?.(offer);
   };
@@ -41,6 +38,9 @@ export const BaseCard = ({
   const handleMouseLeave = () => {
     onCardHover?.(null);
   };
+
+  // Конвертируем рейтинг в проценты для width
+  const ratingWidth = `${(offer.rating * 100) / 5}%`;
 
   return (
     <article
@@ -58,10 +58,10 @@ export const BaseCard = ({
         <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.image}
+            src={offer.previewImage}
             width={imageSize.width}
             height={imageSize.height}
-            alt="Place image"
+            alt={offer.title}
           />
         </Link>
       </div>
@@ -87,12 +87,12 @@ export const BaseCard = ({
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }}></span>
+            <span style={{ width: ratingWidth }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${offer.id}`}>{offer.name}</Link>
+          <Link to={`/offer/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>

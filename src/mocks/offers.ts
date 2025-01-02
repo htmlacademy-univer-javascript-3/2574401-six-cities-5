@@ -12,7 +12,8 @@ export const offers = [
       latitude: 52.3909553943508,
       longitude: 4.85309666406198,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 2,
@@ -27,7 +28,8 @@ export const offers = [
       latitude: 52.3609553943508,
       longitude: 4.85309666406198,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 3,
@@ -42,7 +44,8 @@ export const offers = [
       latitude: 52.3909553943508,
       longitude: 4.929309666406198,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 4,
@@ -57,7 +60,8 @@ export const offers = [
       latitude: 52.3809553943508,
       longitude: 4.939309666406198,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 5,
@@ -72,7 +76,8 @@ export const offers = [
       latitude: 48.85661,
       longitude: 2.351499,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 6,
@@ -87,7 +92,8 @@ export const offers = [
       latitude: 48.86661,
       longitude: 2.341499,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 7,
@@ -102,7 +108,8 @@ export const offers = [
       latitude: 50.938361,
       longitude: 6.959974,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 8,
@@ -117,7 +124,8 @@ export const offers = [
       latitude: 50.846557,
       longitude: 4.351697,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 9,
@@ -132,7 +140,8 @@ export const offers = [
       latitude: 53.550341,
       longitude: 10.000654,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   },
   {
     id: 10,
@@ -147,6 +156,7 @@ export const offers = [
       latitude: 51.225402,
       longitude: 6.776314,
       zoom: 13
-    }
+    },
+    rating: 4.8,
   }
 ];

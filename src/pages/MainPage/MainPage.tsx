@@ -3,9 +3,11 @@ import OfferList from '@components/OfferList/OfferList';
 import { useMapHover } from '@components/Map/hooks/useMapHover';
 import { CITIES } from '../../mocks/cities';
 import CityList from '@components/CityList/CityList';
-import { useAppSelector } from '../../hooks/redux';
-import { selectCity, selectFilteredOffers } from '../../store/slices/app';
+import { useAppSelector, useAppDispatch } from '../../hooks/redux';
+import { selectCity, selectFilteredOffers, selectSortType, changeSortType } from '../../store/slices/app';
 import { useMemo } from 'react';
+import { SortOptions } from '@components/SortOptions';
+import { SortType } from '@components/SortOptions/types';
 
 /**
  * Компонент главной страницы приложения
@@ -14,7 +16,9 @@ import { useMemo } from 'react';
  * @kind page
  */
 const MainPage = () => {
+  const dispatch = useAppDispatch();
   const city = useAppSelector(selectCity);
+  const sortType = useAppSelector(selectSortType);
   const filteredOffers = useAppSelector(selectFilteredOffers);
   const { selectedPoint, handleOfferHover } = useMapHover();
 
@@ -70,21 +74,10 @@ const MainPage = () => {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{filteredOffers.length} places to stay in {city.name}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
-                </ul>
-              </form>
+              <SortOptions
+                currentSort={sortType}
+                onSortChange={(sort: SortType) => dispatch(changeSortType(sort))}
+              />
               <OfferList
                 offers={filteredOffers}
                 onOfferHover={handleOfferHover}

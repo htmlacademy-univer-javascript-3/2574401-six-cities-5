@@ -1,4 +1,5 @@
-import OfferCard, { Offer } from '../../components/OfferCard/OfferCard';
+import OfferList from '@components/OfferList/OfferList';
+import { Offer } from '@components/OfferCard/OfferCard';
 
 /**
  * Интерфейс для пропсов компонента MainPage
@@ -14,7 +15,7 @@ interface MainPageProps {
  * Компонент главной страницы приложения
  * Отображает список предложений и карту
  *
- * @kind component
+ * @kind page
  */
 const MainPage = ({ offers }: MainPageProps) => (
   <div className="page page--gray page--main">
@@ -104,11 +105,7 @@ const MainPage = ({ offers }: MainPageProps) => (
                 <li className="places__option" tabIndex={0}>Top rated first</li>
               </ul>
             </form>
-            <div className="cities__places-list places__list tabs__content">
-              {offers.map((offer) => (
-                <OfferCard key={offer.id} offer={offer} />
-              ))}
-            </div>
+            <OfferList offers={offers} />
           </section>
           <div className="cities__right-section">
             <section className="cities__map map"></section>

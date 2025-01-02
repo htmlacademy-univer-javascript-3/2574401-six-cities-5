@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
  * Компонент страницы 404
  * Отображает сообщение об ошибке и ссылку на главную страницу
  *
- * @kind component
+ * @kind page
  */
 const NotFoundPage = () => (
   <div className="page page--gray page--not-found">

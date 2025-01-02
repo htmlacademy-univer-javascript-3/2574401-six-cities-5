@@ -30,7 +30,7 @@ export const App = ({offers}: AppProps) => (
       <Route path="/login" element={<LoginPage />} />
       <Route path="/favorites" element={
         <PrivateRoute>
-          <FavoritesPage />
+          <FavoritesPage offers={offers} />
         </PrivateRoute>
       }
       />

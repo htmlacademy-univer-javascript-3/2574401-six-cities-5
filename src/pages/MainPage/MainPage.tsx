@@ -1,8 +1,8 @@
 import Map from '../../components/Map/Map';
 import OfferList from '@components/OfferList/OfferList';
 import { Offer } from '@components/OfferCard/OfferCard';
-import { useState, useCallback } from 'react';
 import { MapPoint } from '@components/Map/lib/types';
+import { useMapHover } from '@components/Map/hooks/useMapHover';
 
 /**
  * Интерфейс для пропсов компонента MainPage
@@ -21,8 +21,6 @@ interface MainPageProps {
  * @kind page
  */
 const MainPage = ({ offers }: MainPageProps) => {
-  const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
-
   // Берем первый город из массива предложений
   const city = {
     name: offers[0].city,
@@ -42,16 +40,7 @@ const MainPage = ({ offers }: MainPageProps) => {
     }
   }));
 
-  // Функция для обработки наведения на предложение
-  const handleOfferHover = useCallback((offer: Offer | null) => {
-    setSelectedPoint(offer ? {
-      id: offer.id,
-      location: {
-        latitude: offer.location.latitude,
-        longitude: offer.location.longitude
-      }
-    } : null);
-  }, []);
+  const { selectedPoint, handleOfferHover } = useMapHover();
 
   return (
     <div className="page page--gray page--main">
@@ -153,6 +142,7 @@ const MainPage = ({ offers }: MainPageProps) => {
                 points={points}
                 selectedPoint={selectedPoint}
                 className="cities__map map"
+                isFulfilledContainer
               />
               {/* </section> */}
             </div>

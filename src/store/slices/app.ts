@@ -1,18 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Offer } from '@components/OfferCard/OfferCard';
-import { City, State } from '../../types/state';
-
-type AppState = {
-  city: City | undefined;
-  offers: Offer[];
-};
+import { SortType } from '@components/SortOptions/types';
+import { AppState, City } from 'src/types/state';
 
 const initialState: AppState = {
-  city: undefined,
+  city: null,
   offers: [],
+  sortType: SortType.Popular
 };
 
-export const appSlice = createSlice({
+const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
@@ -22,23 +19,36 @@ export const appSlice = createSlice({
     loadOffers: (state, action: PayloadAction<Offer[]>) => {
       state.offers = action.payload;
     },
-  },
+    changeSortType: (state, action: PayloadAction<SortType>) => {
+      state.sortType = action.payload;
+    }
+  }
 });
 
-// Селекторы
-export const selectCity = (state: State) => state.app.city;
-export const selectOffers = (state: State) => state.app.offers;
-export const selectFilteredOffers = (state: State) => {
-  const city = selectCity(state);
-  const offers = selectOffers(state);
+export const { changeCity, loadOffers, changeSortType } = appSlice.actions;
+
+export const selectCity = (state: { app: AppState }) => state.app.city;
+export const selectSortType = (state: { app: AppState }) => state.app.sortType;
+
+export const selectFilteredOffers = (state: { app: AppState }) => {
+  const { city, offers, sortType } = state.app;
 
   if (!city) {
-    return offers;
+    return [];
   }
 
-  return offers.filter((offer) => offer.city === city.name);
-};
+  const filteredOffers = offers.filter((offer) => offer.city === city.name);
 
-export const { changeCity, loadOffers } = appSlice.actions;
+  switch (sortType) {
+    case SortType.PriceLowToHigh:
+      return [...filteredOffers].sort((a, b) => a.price - b.price);
+    case SortType.PriceHighToLow:
+      return [...filteredOffers].sort((a, b) => b.price - a.price);
+    case SortType.TopRated:
+      return [...filteredOffers].sort((a, b) => b.rating - a.rating);
+    default:
+      return filteredOffers;
+  }
+};
 
 export default appSlice.reducer;

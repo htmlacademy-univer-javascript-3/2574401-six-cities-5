@@ -29,6 +29,8 @@ export type Offer = {
     /** Зум */
     zoom: number;
   };
+  /** Рейтинг предложения */
+  rating: number;
 }
 
 /**

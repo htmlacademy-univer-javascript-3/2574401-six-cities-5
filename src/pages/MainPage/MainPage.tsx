@@ -1,18 +1,11 @@
 import Map from '../../components/Map/Map';
 import OfferList from '@components/OfferList/OfferList';
-import { Offer } from '@components/OfferCard/OfferCard';
-import { MapPoint } from '@components/Map/lib/types';
 import { useMapHover } from '@components/Map/hooks/useMapHover';
-
-/**
- * Интерфейс для пропсов компонента MainPage
- */
-interface MainPageProps {
-  /**
-   * Массив предложений для отображения
-   */
-  offers: Offer[];
-}
+import { CITIES } from '../../mocks/cities';
+import CityList from '@components/CityList/CityList';
+import { useAppSelector } from '../../hooks/redux';
+import { selectCity, selectFilteredOffers } from '../../store/slices/app';
+import { useMemo } from 'react';
 
 /**
  * Компонент главной страницы приложения
@@ -20,27 +13,22 @@ interface MainPageProps {
  *
  * @kind page
  */
-const MainPage = ({ offers }: MainPageProps) => {
-  // Берем первый город из массива предложений
-  const city = {
-    name: offers[0].city,
-    location: {
-      latitude: offers[0].location.latitude,
-      longitude: offers[0].location.longitude,
-      zoom: offers[0].location.zoom
-    }
-  };
+const MainPage = () => {
+  const city = useAppSelector(selectCity);
+  const filteredOffers = useAppSelector(selectFilteredOffers);
+  const { selectedPoint, handleOfferHover } = useMapHover();
 
-  // Преобразуем offers в точки для карты
-  const points: MapPoint[] = offers.map((offer) => ({
+  const points = useMemo(() => filteredOffers.map((offer) => ({
     id: offer.id,
     location: {
       latitude: offer.location.latitude,
       longitude: offer.location.longitude
     }
-  }));
+  })), [filteredOffers]);
 
-  const { selectedPoint, handleOfferHover } = useMapHover();
+  if (!city) {
+    return null; // или показать лоадер/заглушку
+  }
 
   return (
     <div className="page page--gray page--main">
@@ -75,46 +63,13 @@ const MainPage = ({ offers }: MainPageProps) => {
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
+          <CityList cities={CITIES} />
         </div>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
+              <b className="places__found">{filteredOffers.length} places to stay in {city.name}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -131,12 +86,11 @@ const MainPage = ({ offers }: MainPageProps) => {
                 </ul>
               </form>
               <OfferList
-                offers={offers}
+                offers={filteredOffers}
                 onOfferHover={handleOfferHover}
               />
             </section>
             <div className="cities__right-section">
-              {/* <section className="cities__map"> */}
               <Map
                 city={city}
                 points={points}
@@ -144,7 +98,6 @@ const MainPage = ({ offers }: MainPageProps) => {
                 className="cities__map map"
                 isFulfilledContainer
               />
-              {/* </section> */}
             </div>
           </div>
         </div>

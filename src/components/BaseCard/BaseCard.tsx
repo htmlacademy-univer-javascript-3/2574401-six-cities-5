@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from 'src/types/offer';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
@@ -26,7 +27,7 @@ export interface BaseCardProps {
 /**
  * Базовый компонент карточки предложения
  */
-export const BaseCard = ({
+const BaseCardComponent = memo(({
   offer,
   imageWrapperClassName,
   imageSize,
@@ -37,15 +38,15 @@ export const BaseCard = ({
   const navigate = useNavigate();
   const authStatus = useAppSelector((state) => state.user.authorizationStatus);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     onCardHover?.(offer);
-  };
+  }, [offer, onCardHover]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     onCardHover?.(null);
-  };
+  }, [onCardHover]);
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = useCallback(() => {
     if (authStatus !== AuthorizationStatus.Auth) {
       navigate('/login');
       return;
@@ -55,7 +56,7 @@ export const BaseCard = ({
       id: offer.id,
       status: offer.isFavorite ? 0 : 1
     }));
-  };
+  }, [authStatus, dispatch, navigate, offer.id, offer.isFavorite]);
 
   // Конвертируем рейтинг в проценты для width
   const ratingWidth = `${(offer.rating * 100) / 5}%`;
@@ -117,5 +118,9 @@ export const BaseCard = ({
       </div>
     </article>
   );
-};
+});
+
+BaseCardComponent.displayName = 'BaseCard';
+
+export const BaseCard = BaseCardComponent;
 

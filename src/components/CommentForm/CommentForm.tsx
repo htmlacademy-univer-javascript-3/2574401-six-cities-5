@@ -1,4 +1,4 @@
-import { Fragment, useState, ChangeEvent, FormEvent } from 'react';
+import { Fragment, useState, ChangeEvent, FormEvent, memo, useCallback, useMemo } from 'react';
 
 /**
  * Интерфейс для пропсов компонента CommentForm
@@ -17,27 +17,53 @@ const STARS = [5, 4, 3, 2, 1];
  *
  * @kind component
  */
-const CommentForm = ({ onSubmit }: CommentFormProps) => {
+const CommentFormComponent = memo(({ onSubmit }: CommentFormProps) => {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
 
-  const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleCommentChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     setComment(event.target.value);
-  };
+  }, []);
 
-  const handleRatingChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleRatingChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setRating(Number(event.target.value));
-  };
+  }, []);
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = useCallback((event: FormEvent) => {
     event.preventDefault();
 
     onSubmit(comment, rating);
     setComment('');
     setRating(0);
-  };
+  }, [comment, rating, onSubmit]);
 
   const isSubmitDisabled = comment.length < MIN_COMMENT_LENGTH || rating === 0;
+
+  const ratingInputs = useMemo(() =>
+    STARS.map((star) => (
+      <Fragment key={star}>
+        <input
+          className="form__rating-input visually-hidden"
+          name="rating"
+          value={star}
+          id={`${star}-stars`}
+          type="radio"
+          checked={rating === star}
+          onChange={handleRatingChange}
+        />
+        <label
+          htmlFor={`${star}-stars`}
+          className="reviews__rating-label form__rating-label"
+          title={`${star} stars`}
+        >
+          <svg className="form__star-image" width="37" height="33">
+            <use xlinkHref="#icon-star"></use>
+          </svg>
+        </label>
+      </Fragment>
+    )),
+  [rating, handleRatingChange]
+  );
 
   return (
     <form className="reviews__form form" onSubmit={handleSubmit}>
@@ -45,28 +71,7 @@ const CommentForm = ({ onSubmit }: CommentFormProps) => {
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        {STARS.map((star) => (
-          <Fragment key={star}>
-            <input
-              className="form__rating-input visually-hidden"
-              name="rating"
-              value={star}
-              id={`${star}-stars`}
-              type="radio"
-              checked={rating === star}
-              onChange={handleRatingChange}
-            />
-            <label
-              htmlFor={`${star}-stars`}
-              className="reviews__rating-label form__rating-label"
-              title={`${star} stars`}
-            >
-              <svg className="form__star-image" width="37" height="33">
-                <use xlinkHref="#icon-star"></use>
-              </svg>
-            </label>
-          </Fragment>
-        ))}
+        {ratingInputs}
       </div>
       <textarea
         className="reviews__textarea form__textarea"
@@ -90,6 +95,8 @@ const CommentForm = ({ onSubmit }: CommentFormProps) => {
       </div>
     </form>
   );
-};
+});
 
-export default CommentForm;
+CommentFormComponent.displayName = 'CommentForm';
+
+export default CommentFormComponent;

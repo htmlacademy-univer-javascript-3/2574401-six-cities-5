@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { fetchOffers, checkAuth, fetchFavorites } from './store/api-actions';
 import { RootState } from './store/root-reducer';
 import { DataState } from './store/slices/data';
+import GuestRoute from '@components/GuestRoute/GuestRoute';
 
 /**
  * Корневой компонент приложения
@@ -21,8 +22,8 @@ export const App = () => {
   const { isLoading } = useAppSelector((state: RootState): DataState => state.data);
 
   useEffect(() => {
-    dispatch(fetchOffers());
     dispatch(checkAuth());
+    dispatch(fetchOffers());
     dispatch(fetchFavorites());
   }, [dispatch]);
 
@@ -34,7 +35,14 @@ export const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout pageClassName="page--gray page--main"><MainPage /></Layout>} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
         <Route
           path="/favorites"
           element={
@@ -43,10 +51,7 @@ export const App = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/offer/:id"
-          element={<Layout><OfferPage /></Layout>}
-        />
+        <Route path="/offer/:id" element={<Layout><OfferPage /></Layout>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

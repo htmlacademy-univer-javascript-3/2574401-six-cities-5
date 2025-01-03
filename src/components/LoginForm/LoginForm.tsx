@@ -12,10 +12,22 @@ const LoginFormComponent = memo(() => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validatePassword = (value: string) => {
+    const hasLetter = /[a-zA-Z]/.test(value);
+    const hasNumber = /[0-9]/.test(value);
+    return hasLetter && hasNumber;
+  };
 
   const handleSubmit = useCallback((evt: FormEvent) => {
     evt.preventDefault();
     setError('');
+
+    if (!validatePassword(password)) {
+      setError('Password must contain at least one letter and one number');
+      return;
+    }
 
     dispatch(login({ email, password }))
       .unwrap()
@@ -32,7 +44,13 @@ const LoginFormComponent = memo(() => {
   }, []);
 
   const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const value = e.target.value;
+    setPassword(value);
+    if (!validatePassword(value)) {
+      setPasswordError('Password must contain at least one letter and one number');
+    } else {
+      setPasswordError('');
+    }
   }, []);
 
   return (
@@ -66,7 +84,13 @@ const LoginFormComponent = memo(() => {
           value={password}
           onChange={handlePasswordChange}
           data-testid="password"
+          pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{1,}$"
         />
+        {passwordError && (
+          <div className="login__error" data-testid="password-error">
+            {passwordError}
+          </div>
+        )}
       </div>
       <button
         className="login__submit form__submit button"

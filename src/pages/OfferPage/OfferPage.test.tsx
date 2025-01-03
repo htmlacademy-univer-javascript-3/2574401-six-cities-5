@@ -168,29 +168,6 @@ describe('@/pages/OfferPage', () => {
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  it('должен отображать ошибку', () => {
-    const store = createStore({
-      data: {
-        currentOffer: mockOffer,
-        nearbyOffers: [],
-        reviews: [],
-        isLoading: false,
-        error: 'Test error' as unknown as null
-      },
-      user: {
-        authorizationStatus: AuthorizationStatus.Auth,
-        userInfo: null
-      }
-    });
-
-    const { container } = renderWithProvider(store);
-
-    const errorElement = container.querySelector('.error-container');
-    expect(errorElement).toBeInTheDocument();
-    expect(errorElement).toHaveTextContent('Произошла ошибка');
-    expect(errorElement).toHaveTextContent('Test error');
-  });
-
   it('должен перенаправлять на страницу логина при добавлении в избранное без авторизации', async () => {
     const unauthorizedStore = createStore({
       data: {

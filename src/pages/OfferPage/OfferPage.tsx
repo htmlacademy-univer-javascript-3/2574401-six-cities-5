@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import ReviewList from '@components/ReviewList/ReviewList';
@@ -13,7 +13,14 @@ import { Spinner } from '@/components/Spinner/Spinner';
 
 /**
  * Компонент страницы предложения
- * Отображает информацию о предложении и отзывы
+ * Отображает детальную информацию о предложении аренды:
+ * - Фотографии (до 6 штук)
+ * - Основную информацию (заголовок, тип, рейтинг, особенности)
+ * - Информацию о хозяине
+ * - Отзывы пользователей
+ * - Карту с ближайшими предложениями
+ *
+ * @component
  */
 const OfferPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,8 +30,9 @@ const OfferPage = () => {
   const currentOffer = useAppSelector(selectCurrentOffer);
   const nearbyOffers = useAppSelector(selectNearbyOffers);
   const reviews = useAppSelector(selectReviews);
-  const { isLoading, error } = useAppSelector((state) => state.data);
+  const { isLoading } = useAppSelector((state) => state.data);
   const authStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loadOfferData = useCallback(async (offerId: string) => {
     try {
@@ -67,7 +75,10 @@ const OfferPage = () => {
 
   const handleReviewSubmit = (comment: string, rating: number) => {
     if (id) {
-      dispatch(postReview({ offerId: id, comment, rating }));
+      setIsSubmitting(true);
+      dispatch(postReview({ offerId: id, comment, rating })).unwrap().then(() => {
+        setIsSubmitting(false);
+      });
     }
   };
 
@@ -75,15 +86,6 @@ const OfferPage = () => {
 
   if (isLoading || !currentOffer) {
     return <Spinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="error-container" data-testid="error-container">
-        <h2>Произошла ошибка</h2>
-        <p>{error}</p>
-      </div>
-    );
   }
 
   // Подготавливаем город для карты
@@ -97,12 +99,15 @@ const OfferPage = () => {
   };
 
   // Подготавливаем точки для карты (текущее предложение + ближайшие)
-  const points = [currentOffer, ...nearbyOffers].map((offer) => ({
+  const points = [
+    currentOffer,
+    ...nearbyOffers
+  ].map((offer) => ({
     id: offer.id,
     location: offer.location
   }));
 
-  const ratingWidth = `${(currentOffer.rating * 100) / 5}%`;
+  const ratingWidth = `${(Math.round(currentOffer.rating) * 100) / 5}%`;
 
   return (
     <main className="page__main page__main--offer">
@@ -145,7 +150,9 @@ const OfferPage = () => {
                 <span style={{ width: ratingWidth }}></span>
                 <span className="visually-hidden">Rating</span>
               </div>
-              <span className="offer__rating-value rating__value">{currentOffer.rating}</span>
+              <span className="offer__rating-value rating__value">
+                {currentOffer.rating.toFixed(1)}
+              </span>
             </div>
             <ul className="offer__features">
               <li className="offer__feature offer__feature--entire">
@@ -202,6 +209,7 @@ const OfferPage = () => {
             <ReviewList
               reviews={reviews}
               onSubmit={handleReviewSubmit}
+              isSubmitting={isSubmitting}
               isAuthorized={authStatus === AuthorizationStatus.Auth}
             />
           </div>

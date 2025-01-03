@@ -127,8 +127,19 @@ describe('App Routing', () => {
 
   it('должен перенаправлять неавторизованных пользователей с /favorites на /login', () => {
     mockUseAppSelector.mockImplementation((selector) => selector({
-      data: { isLoading: false, offers: [], favorites: [], currentOffer: null, nearbyOffers: [], reviews: [], error: null },
-      user: { authorizationStatus: AuthorizationStatus.NoAuth, userInfo: null },
+      data: {
+        isLoading: false,
+        offers: [],
+        favorites: [],
+        currentOffer: null,
+        nearbyOffers: [],
+        reviews: [],
+        error: null
+      },
+      user: {
+        authorizationStatus: AuthorizationStatus.NoAuth,
+        userInfo: null
+      },
       app: {
         city: {
           name: 'Paris',
@@ -139,7 +150,14 @@ describe('App Routing', () => {
           }
         },
         sortType: SortType.Popular,
-        cities: []
+        cities: [{
+          name: 'Paris',
+          location: {
+            latitude: 48.85661,
+            longitude: 2.351499,
+            zoom: 13
+          }
+        }]
       }
     }));
 

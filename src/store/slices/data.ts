@@ -128,7 +128,7 @@ export const selectCurrentOffer = createSelector(
 
 export const selectNearbyOffers = createSelector(
   [selectDataState],
-  (data) => data.nearbyOffers
+  (data) => data.nearbyOffers.slice(0, 3)
 );
 
 export const selectReviews = createSelector(

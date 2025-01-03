@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Offer } from '../types/offer';
 import { Review } from '../components/Review/types';
 import { setAuthStatus, setUserInfo, AuthorizationStatus, UserInfo } from './slices/user';
-import { saveToken, dropToken } from '../services/token';
+import { saveToken, dropToken, getToken } from '../services/token';
 import { AppDispatch, State } from '../types/state';
 import { AxiosInstance } from 'axios';
 
@@ -190,7 +190,7 @@ export const checkAuth = createAsyncThunk<
 >('user/checkAuth',
   async (_, { dispatch, extra: api }) => {
     try {
-      const token = localStorage.getItem('six-cities-token');
+      const token = getToken();
       if (!token) {
         dispatch(setAuthStatus(AuthorizationStatus.NoAuth));
         return;
@@ -201,6 +201,7 @@ export const checkAuth = createAsyncThunk<
       dispatch(setUserInfo(data));
     } catch {
       dispatch(setAuthStatus(AuthorizationStatus.NoAuth));
+      dropToken();
     }
   }
 );

@@ -71,7 +71,7 @@ describe('@/components/LoginForm', () => {
     const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await userEvent.type(emailInput, 'test@test.com');
-    await userEvent.type(passwordInput, 'wrong-password');
+    await userEvent.type(passwordInput, 'valid1');
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -121,5 +121,25 @@ describe('@/components/LoginForm', () => {
     await waitFor(() => {
       expect(emailInput).toBeValid();
     });
+  });
+
+  it('должен проверять валидность пароля', async () => {
+    renderWithRouter(<LoginForm />);
+
+    const passwordInput = screen.getByTestId('password');
+
+    // Только буквы
+    await userEvent.type(passwordInput, 'onlyletters');
+    expect(screen.getByTestId('password-error')).toBeInTheDocument();
+
+    // Только цифры
+    await userEvent.clear(passwordInput);
+    await userEvent.type(passwordInput, '12345');
+    expect(screen.getByTestId('password-error')).toBeInTheDocument();
+
+    // Валидный пароль
+    await userEvent.clear(passwordInput);
+    await userEvent.type(passwordInput, 'password123');
+    expect(screen.queryByTestId('password-error')).not.toBeInTheDocument();
   });
 });

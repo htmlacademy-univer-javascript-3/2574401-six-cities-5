@@ -6,13 +6,17 @@ import FavoritesPage from '@pages/FavoritesPage/FavoritesPage';
 import OfferPage from '@pages/OfferPage/OfferPage';
 import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import PrivateRoute from '@components/PrivateRoute/PrivateRoute';
+import Layout from '@components/Layout/Layout';
 import { Spinner } from '@components/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
-import { fetchOffers } from './store/api-actions';
+import { fetchOffers, checkAuth, fetchFavorites } from './store/api-actions';
 import { selectOffers } from './store/slices/app';
 import { RootState } from './store/root-reducer';
 import { DataState } from './store/slices/data';
 
+/**
+ * Корневой компонент приложения
+ */
 export const App = () => {
   const dispatch = useAppDispatch();
   const offers = useAppSelector(selectOffers);
@@ -20,6 +24,8 @@ export const App = () => {
 
   useEffect(() => {
     dispatch(fetchOffers());
+    dispatch(checkAuth());
+    dispatch(fetchFavorites());
   }, [dispatch]);
 
   if (isLoading) {
@@ -38,17 +44,20 @@ export const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<Layout pageClassName="page--gray page--main"><MainPage /></Layout>} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/favorites"
           element={
             <PrivateRoute>
-              <FavoritesPage />
+              <Layout><FavoritesPage /></Layout>
             </PrivateRoute>
           }
         />
-        <Route path="/offer/:id" element={<OfferPage offers={offers} reviews={[]} />} />
+        <Route
+          path="/offer/:id"
+          element={<Layout><OfferPage offers={offers} reviews={[]} /></Layout>}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

@@ -18,6 +18,20 @@ export const api = axios.create({
 });
 
 /**
+ * Добавление токена авторизации в заголовки запросов
+ */
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('six-cities-token');
+    if (token && config.headers) {
+      config.headers['X-Token'] = token;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+/**
  * Обработчик ошибок запросов
  */
 api.interceptors.response.use(

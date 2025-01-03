@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from 'src/types/offer';
-
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { changeFavoriteStatus } from '@/store/api-actions';
+import { AuthorizationStatus } from '@/store/slices/user';
 
 /**
  * Пропсы базового компонента карточки
@@ -31,12 +33,28 @@ export const BaseCard = ({
   cardClassName,
   onCardHover
 }: BaseCardProps) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authStatus = useAppSelector((state) => state.user.authorizationStatus);
+
   const handleMouseEnter = () => {
     onCardHover?.(offer);
   };
 
   const handleMouseLeave = () => {
     onCardHover?.(null);
+  };
+
+  const handleFavoriteClick = () => {
+    if (authStatus !== AuthorizationStatus.Auth) {
+      navigate('/login');
+      return;
+    }
+
+    dispatch(changeFavoriteStatus({
+      id: offer.id,
+      status: offer.isFavorite ? 0 : 1
+    }));
   };
 
   // Конвертируем рейтинг в проценты для width
@@ -76,6 +94,7 @@ export const BaseCard = ({
               offer.isFavorite ? 'place-card__bookmark-button--active' : ''
             }`}
             type="button"
+            onClick={handleFavoriteClick}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

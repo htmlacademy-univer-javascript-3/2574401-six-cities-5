@@ -79,7 +79,7 @@ const OfferPage = () => {
 
   if (error) {
     return (
-      <div className="error-container">
+      <div className="error-container" data-testid="error-container">
         <h2>Произошла ошибка</h2>
         <p>{error}</p>
       </div>

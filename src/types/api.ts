@@ -4,8 +4,8 @@ import { AxiosError } from 'axios';
  * Тип ошибки API
  */
 export interface ApiError {
+  errorType: 'COMMON_ERROR' | 'VALIDATION_ERROR';
   message: string;
-  code: string;
 }
 
 /**
@@ -32,7 +32,11 @@ export interface ValidationErrorDetail {
  * Тип ошибки валидации
  */
 export interface ValidationError extends ApiError {
-  details: ValidationErrorDetail[];
+  errorType: 'VALIDATION_ERROR';
+  details: {
+    field: string;
+    messages: string[];
+  }[];
 }
 
 /**

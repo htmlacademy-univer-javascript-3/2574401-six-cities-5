@@ -11,6 +11,7 @@ interface OfferListProps {
    */
   offers: Offer[];
   onOfferHover: (offer: Offer | null) => void;
+  className?: string;
 }
 
 /**
@@ -19,7 +20,7 @@ interface OfferListProps {
  *
  * @kind component
  */
-const OfferListComponent = memo(({ offers, onOfferHover }: OfferListProps) => {
+const OfferListComponent = memo(({ offers, onOfferHover, className }: OfferListProps) => {
   const offerCards = useMemo(() =>
     offers.map((offer) => (
       <OfferCard key={offer.id} offer={offer} onCardHover={onOfferHover} />
@@ -28,7 +29,10 @@ const OfferListComponent = memo(({ offers, onOfferHover }: OfferListProps) => {
   );
 
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div
+      className={`cities__places-list places__list tabs__content ${className}`}
+      data-testid="offer-list"
+    >
       {offerCards}
     </div>
   );

@@ -17,7 +17,7 @@ const LoginPage = () => {
   }, [authStatus, navigate]);
 
   return (
-    <div className="page page--gray page--login">
+    <div className="page page--gray page--login" data-testid="login-page">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -30,7 +30,7 @@ const LoginPage = () => {
         </div>
       </header>
 
-      <main className="page__main page__main--login">
+      <main className="page__main page__main--login" data-testid="login-main">
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>

@@ -41,13 +41,13 @@ const MainPage = () => {
   const isEmpty = filteredOffers.length === 0;
 
   return (
-    <main className={`page__main page__main--index ${isEmpty ? 'page__main--index-empty' : ''}`}>
+    <main className={`page__main page__main--index ${isEmpty ? 'page__main--index-empty' : ''}`} data-testid="main-page">
       <h1 className="visually-hidden">Cities</h1>
       <div className="tabs">
         <CityList />
       </div>
       <div className="cities">
-        <div className={`cities__places-container ${isEmpty ? 'cities__places-container--empty' : ''} container`}>
+        <div className={`cities__places-container ${isEmpty ? 'cities__places-container--empty' : ''} container`} data-testid="places-container">
           {isEmpty ? (
             <CitiesEmpty cityName={city.name} />
           ) : (

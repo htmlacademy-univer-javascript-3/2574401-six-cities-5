@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /** Тип данных для информации о пользователе */
-type UserInfo = {
+export type UserInfo = {
   name: string;
   avatarUrl: string;
   isPro: boolean;
   email: string;
+  token: string;
 };
 
 /** Статус авторизации */
@@ -30,10 +31,10 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setAuthStatus: (state: UserState, action: PayloadAction<AuthorizationStatus>) => {
+    setAuthStatus: (state, action: PayloadAction<AuthorizationStatus>) => {
       state.authorizationStatus = action.payload;
     },
-    setUserInfo: (state: UserState, action: PayloadAction<UserInfo | null>) => {
+    setUserInfo: (state, action: PayloadAction<UserInfo | null>) => {
       state.userInfo = action.payload;
     },
   },

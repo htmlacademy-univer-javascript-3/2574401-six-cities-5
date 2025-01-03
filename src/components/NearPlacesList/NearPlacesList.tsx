@@ -28,7 +28,7 @@ const NearPlacesListComponent = memo(({ offers, onOfferHover }: NearPlacesListPr
   );
 
   return (
-    <div className="near-places__list places__list">
+    <div className="near-places__list places__list" data-testid="near-places-list">
       {nearPlaceCards}
     </div>
   );

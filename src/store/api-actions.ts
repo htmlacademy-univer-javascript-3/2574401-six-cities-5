@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Offer } from '../types/offer';
 import { Review } from '../components/Review/types';
-import { setAuthStatus, setUserInfo, AuthorizationStatus } from './slices/user';
+import { setAuthStatus, setUserInfo, AuthorizationStatus, UserInfo } from './slices/user';
 import { saveToken, dropToken } from '../services/token';
 import { AppDispatch, State } from '../types/state';
 import { AxiosInstance } from 'axios';
@@ -176,13 +176,7 @@ type AuthData = {
 };
 
 /** Тип ответа от сервера при авторизации */
-type AuthResponse = {
-  token: string;
-  name: string;
-  avatarUrl: string;
-  isPro: boolean;
-  email: string;
-};
+type AuthResponse = UserInfo;
 
 /** Проверка статуса авторизации */
 export const checkAuth = createAsyncThunk<

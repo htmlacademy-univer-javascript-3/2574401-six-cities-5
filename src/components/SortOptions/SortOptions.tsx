@@ -1,4 +1,4 @@
-import { useState, useCallback, memo, useMemo } from 'react';
+import { useState, useCallback, memo, useMemo, useEffect, useRef } from 'react';
 import cn from 'classnames';
 import { SortType } from './types';
 
@@ -17,6 +17,7 @@ interface SortOptionsProps {
  */
 const SortOptionsComponent = memo(({ currentSort, onSortChange }: SortOptionsProps) => {
   const [isOpened, setIsOpened] = useState(false);
+  const componentRef = useRef<HTMLFormElement>(null);
 
   const handleTypeClick = useCallback((type: SortType) => {
     onSortChange(type);
@@ -26,6 +27,28 @@ const SortOptionsComponent = memo(({ currentSort, onSortChange }: SortOptionsPro
   const handleToggleOpen = useCallback(() => {
     setIsOpened((prev) => !prev);
   }, []);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsOpened(false);
+    }
+  }, []);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (componentRef.current && !componentRef.current.contains(event.target as Node)) {
+      setIsOpened(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleKeyDown, handleClickOutside]);
 
   const sortOptionsList = useMemo(() =>
     Object.values(SortType).map((type) => (
@@ -37,18 +60,21 @@ const SortOptionsComponent = memo(({ currentSort, onSortChange }: SortOptionsPro
         )}
         tabIndex={0}
         onClick={() => handleTypeClick(type)}
+        data-testid={`sort-option-${type}`}
       >
         {type}
       </li>
     )), [currentSort, handleTypeClick]);
 
   return (
-    <form className="places__sorting" action="#" method="get">
+    <form className="places__sorting" action="#" method="get" ref={componentRef}>
       <span className="places__sorting-caption">Sort by</span>
       <span
         className="places__sorting-type"
         tabIndex={0}
         onClick={handleToggleOpen}
+        onKeyDown={(e) => e.key === 'Enter' && handleToggleOpen()}
+        data-testid="sort-type"
       >
         {currentSort}
         <svg className="places__sorting-arrow" width="7" height="4">

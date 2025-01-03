@@ -113,4 +113,61 @@ describe('@/store/slices/data', () => {
     expect(result.favorites).toEqual(favorites);
     expect(result.isLoading).toBe(false);
   });
+
+  it('должен обновить currentOffer при изменении избранного', () => {
+    const state = {
+      ...initialState,
+      currentOffer: mockOffer
+    };
+
+    const updatedOffer = { ...mockOffer, isFavorite: true };
+    const result = dataSlice.reducer(
+      state,
+      changeFavoriteStatus.fulfilled(updatedOffer, '', { id: '1', status: 1 })
+    );
+
+    expect(result.currentOffer).toEqual(updatedOffer);
+  });
+
+  it('должен обновить nearbyOffers при изменении избранного', () => {
+    const state = {
+      ...initialState,
+      nearbyOffers: [mockOffer]
+    };
+
+    const updatedOffer = { ...mockOffer, isFavorite: true };
+    const result = dataSlice.reducer(
+      state,
+      changeFavoriteStatus.fulfilled(updatedOffer, '', { id: '1', status: 1 })
+    );
+
+    expect(result.nearbyOffers[0]).toEqual(updatedOffer);
+  });
+
+  it('должен удалять предложение из избранного при установке isFavorite в false', () => {
+    const state = {
+      ...initialState,
+      favorites: [mockOffer],
+      offers: [mockOffer]
+    };
+
+    const updatedOffer = { ...mockOffer, isFavorite: false };
+    const result = dataSlice.reducer(
+      state,
+      changeFavoriteStatus.fulfilled(updatedOffer, '', { id: '1', status: 0 })
+    );
+
+    expect(result.favorites).toHaveLength(0);
+    expect(result.offers[0].isFavorite).toBe(false);
+  });
+
+  it('должен сбрасывать ошибку при начале новых запросов', () => {
+    const stateWithError = {
+      ...initialState,
+      error: 'Previous error'
+    };
+
+    const result = dataSlice.reducer(stateWithError, fetchOffers.pending);
+    expect(result.error).toBeNull();
+  });
 });

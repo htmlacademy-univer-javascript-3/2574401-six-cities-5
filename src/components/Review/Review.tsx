@@ -42,7 +42,7 @@ const Review = ({ review }: ReviewProps) => {
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <p className="reviews__text">
+        <p className="reviews__text" data-testid="review-text">
           {text}
         </p>
         <time className="reviews__time" dateTime={date}>

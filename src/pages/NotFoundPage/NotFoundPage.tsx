@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
  * @kind page
  */
 const NotFoundPage = () => (
-  <div className="page page--gray page--not-found">
+  <div className="page page--gray page--not-found" data-testid="not-found-page">
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
@@ -20,7 +20,7 @@ const NotFoundPage = () => (
       </div>
     </header>
 
-    <main className="page__main page__main--not-found">
+    <main className="page__main page__main--not-found" data-testid="not-found-main">
       <div className="container">
         <h1>404 Not Found</h1>
         <p>Извините, страница не найдена.</p>

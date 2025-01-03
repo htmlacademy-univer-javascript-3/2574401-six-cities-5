@@ -129,6 +129,7 @@ const MapComponent = memo(({
       className={`map ${className}`}
       ref={mapRef}
       style={isFulfilledContainer ? { height: '100%', width: '100%' } : {}}
+      data-testid="map-container"
     />
   );
 });

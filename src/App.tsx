@@ -10,7 +10,6 @@ import Layout from '@components/Layout/Layout';
 import { Spinner } from '@components/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { fetchOffers, checkAuth, fetchFavorites } from './store/api-actions';
-import { selectOffers } from './store/slices/app';
 import { RootState } from './store/root-reducer';
 import { DataState } from './store/slices/data';
 
@@ -19,8 +18,7 @@ import { DataState } from './store/slices/data';
  */
 export const App = () => {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(selectOffers);
-  const { isLoading, error } = useAppSelector((state: RootState): DataState => state.data);
+  const { isLoading } = useAppSelector((state: RootState): DataState => state.data);
 
   useEffect(() => {
     dispatch(fetchOffers());
@@ -30,15 +28,6 @@ export const App = () => {
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="error-container">
-        <h2>Произошла ошибка</h2>
-        <p>{error}</p>
-      </div>
-    );
   }
 
   return (
@@ -56,7 +45,7 @@ export const App = () => {
         />
         <Route
           path="/offer/:id"
-          element={<Layout><OfferPage offers={offers} reviews={[]} /></Layout>}
+          element={<Layout><OfferPage /></Layout>}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -54,6 +54,29 @@ export const fetchOffer = createAsyncThunk<
 );
 
 /**
+ * Получение списка предложений неподалёку
+ */
+export const fetchNearbyOffers = createAsyncThunk<
+  Offer[],
+  string,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+    rejectValue: string;
+  }
+>('data/fetchNearbyOffers',
+  async (id, { extra: api, rejectWithValue }) => {
+    try {
+      const { data } = await api.get<Offer[]>(`/offers/${id}/nearby`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Произошла ошибка при загрузке ближайших предложений');
+    }
+  }
+);
+
+/**
  * Получение отзывов для предложения
  */
 export const fetchReviews = createAsyncThunk<
@@ -68,8 +91,8 @@ export const fetchReviews = createAsyncThunk<
 >('data/fetchReviews',
   async (offerId, { extra: api, rejectWithValue }) => {
     try {
-      const { data } = await api.get<Review[]>(`/offers/${offerId}/reviews`);
-      return data;
+      const { data } = await api.get<Review[]>(`/comments/${offerId}`);
+      return data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Произошла ошибка при загрузке отзывов');
     }
@@ -89,9 +112,11 @@ export const postReview = createAsyncThunk<
     rejectValue: string;
   }
 >('data/postReview',
-  async ({ offerId, comment, rating }, { extra: api, rejectWithValue }) => {
+  async ({ offerId, comment, rating }, { dispatch, extra: api, rejectWithValue }) => {
     try {
-      const { data } = await api.post<Review>(`/offers/${offerId}/reviews`, { comment, rating });
+      const { data } = await api.post<Review>(`/comments/${offerId}`, { comment, rating });
+      // После успешной отправки обновляем список отзывов
+      dispatch(fetchReviews(offerId));
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Произошла ошибка при отправке отзыва');

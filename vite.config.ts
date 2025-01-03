@@ -13,12 +13,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@components': path.resolve(__dirname, './src/components'),
       '@pages': path.resolve(__dirname, './src/pages'),
-      '@mocks': path.resolve(__dirname, './src/mocks'),
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
+    include: ['**/*.{test,spec}.{ts,tsx}'],
   },
 });

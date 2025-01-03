@@ -31,8 +31,8 @@ describe('@/store/slices/app', () => {
           zoom: 13
         }
       }
-    ]
-  } as const;
+    ] as City[]
+  };
 
   it('должен вернуть начальное состояние', () => {
     const result = appReducer(undefined, { type: '' });

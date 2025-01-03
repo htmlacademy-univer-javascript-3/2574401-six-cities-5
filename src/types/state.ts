@@ -1,6 +1,7 @@
 import { SortType } from '@components/SortOptions/types';
 import { store } from '../store';
 import { Offer } from './offer';
+import { AuthorizationStatus } from '@/store/slices/user';
 
 /** Местоположение */
 export type Location = {
@@ -25,23 +26,30 @@ export interface AppState {
   cities: City[];
 }
 
+/** Состояние данных */
+export interface DataState {
+  offers: Offer[];
+  favorites: Offer[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+/** Состояние пользователя */
+export interface UserState {
+  authorizationStatus: AuthorizationStatus;
+  userInfo: {
+    name: string;
+    avatarUrl: string;
+    isPro: boolean;
+    email: string;
+  } | null;
+}
+
 /** Корневое состояние */
 export interface State {
-  /** Состояние предложений */
-  offers: {
-    offers: Offer[];
-    isLoading: boolean;
-    error: string | null;
-  };
-  /** Состояние приложения */
   app: AppState;
-  /** Состояние данных */
-  data: {
-    offers: Offer[];
-    favorites: Offer[];
-    isLoading: boolean;
-    error: string | null;
-  };
+  data: DataState;
+  user: UserState;
 }
 
 /** Тип для dispatch */

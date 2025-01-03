@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '@/services/api';
+import { createSlice } from '@reduxjs/toolkit';
 import { Offer } from '@/types/offer';
 import { RootState } from '../root-reducer';
-import { fetchOffers } from '../api-actions';
+import { fetchOffers, fetchFavorites, changeFavoriteStatus } from '../api-actions';
 
 export interface DataState {
   offers: Offer[];
@@ -10,14 +9,6 @@ export interface DataState {
   isLoading: boolean;
   error: string | null;
 }
-
-export const fetchFavorites = createAsyncThunk<Offer[]>(
-  'data/fetchFavorites',
-  async () => {
-    const response = await api.get<Offer[]>('/favorite');
-    return response.data;
-  }
-);
 
 export const dataSlice = createSlice({
   name: 'data',
@@ -53,6 +44,19 @@ export const dataSlice = createSlice({
       .addCase(fetchFavorites.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message ?? 'Произошла ошибка';
+      })
+      .addCase(changeFavoriteStatus.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+        // Обновляем статус в списке offers
+        state.offers = state.offers.map((offer) =>
+          offer.id === updatedOffer.id ? updatedOffer : offer
+        );
+        // Обновляем список избранного
+        if (updatedOffer.isFavorite) {
+          state.favorites.push(updatedOffer);
+        } else {
+          state.favorites = state.favorites.filter((offer) => offer.id !== updatedOffer.id);
+        }
       });
   }
 });

@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppState, City } from '@/types/state';
-import { SortType } from '@components/SortOptions/types';
+import { AppState, City } from '../../types/state';
+import { SortType } from '../../components/SortOptions/types';
 import { RootState } from '../root-reducer';
 import { createSelector } from '@reduxjs/toolkit';
-import { Offer } from '@/types/offer';
+import { Offer } from '../../types/offer';
 
 const initialState: AppState = {
   city: {

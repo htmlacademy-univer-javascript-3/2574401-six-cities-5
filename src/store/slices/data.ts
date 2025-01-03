@@ -1,11 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Offer } from '@/types/offer';
+import { Review } from '@/components/Review/types';
 import { RootState } from '../root-reducer';
-import { fetchOffers, fetchFavorites, changeFavoriteStatus } from '../api-actions';
+import { fetchOffers, fetchFavorites, changeFavoriteStatus, fetchOffer, fetchNearbyOffers, fetchReviews, postReview } from '../api-actions';
 
 export interface DataState {
   offers: Offer[];
   favorites: Offer[];
+  currentOffer: Offer | null;
+  nearbyOffers: Offer[];
+  reviews: Review[];
   isLoading: boolean;
   error: string | null;
 }
@@ -15,6 +19,9 @@ export const dataSlice = createSlice({
   initialState: {
     offers: [],
     favorites: [],
+    currentOffer: null,
+    nearbyOffers: [],
+    reviews: [],
     isLoading: false,
     error: null
   } as DataState,
@@ -51,17 +58,59 @@ export const dataSlice = createSlice({
         state.offers = state.offers.map((offer) =>
           offer.id === updatedOffer.id ? updatedOffer : offer
         );
+        state.favorites = state.favorites.map((offer) =>
+          offer.id === updatedOffer.id ? updatedOffer : offer
+        );
+        state.nearbyOffers = state.nearbyOffers.map((offer) =>
+          offer.id === updatedOffer.id ? updatedOffer : offer
+        );
         // Обновляем список избранного
         if (updatedOffer.isFavorite) {
           state.favorites.push(updatedOffer);
         } else {
           state.favorites = state.favorites.filter((offer) => offer.id !== updatedOffer.id);
         }
+        // Обновляем текущее предложение если оно совпадает
+        if (state.currentOffer?.id === updatedOffer.id) {
+          state.currentOffer = updatedOffer;
+        }
+      })
+      .addCase(fetchOffer.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchOffer.fulfilled, (state, action) => {
+        state.currentOffer = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchOffer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Произошла ошибка';
+      })
+      .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
+        state.nearbyOffers = action.payload;
+      })
+      .addCase(fetchReviews.fulfilled, (state, action) => {
+        state.reviews = action.payload;
+      })
+      .addCase(postReview.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(postReview.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(postReview.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Произошла ошибка при отправке отзыва';
       });
   }
 });
 
 export const selectOffers = (state: RootState) => state.data.offers;
 export const selectFavorites = (state: RootState) => state.data.favorites;
+export const selectCurrentOffer = (state: RootState) => state.data.currentOffer;
+export const selectNearbyOffers = (state: RootState) => state.data.nearbyOffers;
+export const selectReviews = (state: RootState) => state.data.reviews;
 
 export default dataSlice.reducer;

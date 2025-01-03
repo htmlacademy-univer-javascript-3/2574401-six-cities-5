@@ -10,13 +10,15 @@ interface ReviewListProps {
   reviews: ReviewType[];
   /** Обработчик отправки нового отзыва */
   onSubmit: (comment: string, rating: number) => void;
+  /** Флаг авторизации пользователя */
+  isAuthorized: boolean;
 }
 
 /**
  * Компонент списка отзывов
  * Отображает список отзывов и форму для добавления нового отзыва
  */
-const ReviewList = ({ reviews, onSubmit }: ReviewListProps) => (
+const ReviewList = ({ reviews, onSubmit, isAuthorized }: ReviewListProps) => (
   <section className="offer__reviews reviews">
     <h2 className="reviews__title">
       Reviews &middot; <span className="reviews__amount">{reviews.length}</span>
@@ -26,7 +28,7 @@ const ReviewList = ({ reviews, onSubmit }: ReviewListProps) => (
         <Review key={review.id} review={review} />
       ))}
     </ul>
-    <CommentForm onSubmit={onSubmit} />
+    {isAuthorized && <CommentForm onSubmit={onSubmit} />}
   </section>
 );
 

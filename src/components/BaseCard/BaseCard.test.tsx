@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
@@ -77,5 +77,35 @@ describe('components/BaseCard', () => {
     if (mockOffer.isPremium) {
       expect(screen.getByText('Premium')).toBeInTheDocument();
     }
+  });
+
+  it('должен корректно округлять рейтинг', () => {
+    const testCases = [
+      { input: 3.1, expected: '60%' }, // 3 звезды
+      { input: 4.5, expected: '100%' }, // 5 звезд
+      { input: 3.4, expected: '60%' }, // 3 звезды
+      { input: 3.6, expected: '80%' }, // 4 звезды
+    ];
+
+    testCases.forEach(({ input, expected }) => {
+      cleanup();
+
+      const offerWithRating = { ...mockOffer, rating: input };
+      render(
+        <Provider store={mockStore}>
+          <MemoryRouter>
+            <BaseCard
+              offer={offerWithRating}
+              imageWrapperClassName=""
+              imageSize={{ width: 0, height: 0 }}
+              cardClassName=""
+            />
+          </MemoryRouter>
+        </Provider>
+      );
+
+      const ratingElement = screen.getByTestId('rating-stars');
+      expect(ratingElement).toHaveStyle({ width: expected });
+    });
   });
 });

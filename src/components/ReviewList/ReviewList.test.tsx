@@ -121,4 +121,32 @@ describe('@/components/ReviewList', () => {
 
     expect(handleSubmit).toHaveBeenCalledWith('Test comment', 4);
   });
+
+  it('должен отображать не более 10 отзывов, отсортированных от новых к старым', () => {
+    const manyReviews: ReviewType[] = Array.from({ length: 15 }, (_, index) => ({
+      id: index,
+      date: new Date(2024, 0, index + 1).toISOString(),
+      user: {
+        name: `User ${index}`,
+        avatarUrl: 'avatar.jpg',
+        isPro: false
+      },
+      text: `Review ${index}`,
+      rating: 5
+    }));
+
+    renderWithProvider(
+      <ReviewList
+        reviews={manyReviews}
+        onSubmit={() => {}}
+        isAuthorized={false}
+      />
+    );
+
+    const reviewElements = screen.getAllByTestId('review-text');
+    expect(reviewElements).toHaveLength(10);
+
+    const lastReviewText = `Review ${14}`;
+    expect(reviewElements[0]).toHaveTextContent(lastReviewText);
+  });
 });

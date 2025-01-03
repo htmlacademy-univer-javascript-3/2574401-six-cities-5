@@ -58,8 +58,8 @@ const BaseCardComponent = memo(({
     }));
   }, [authStatus, dispatch, navigate, offer.id, offer.isFavorite]);
 
-  // Конвертируем рейтинг в проценты для width
-  const ratingWidth = `${(offer.rating * 100) / 5}%`;
+  // Округляем рейтинг до ближайшего целого и конвертируем в проценты
+  const ratingWidth = `${(Math.round(offer.rating) * 100) / 5}%`;
 
   return (
     <article
@@ -107,7 +107,7 @@ const BaseCardComponent = memo(({
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: ratingWidth }}></span>
+            <span style={{ width: ratingWidth }} data-testid="rating-stars"></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

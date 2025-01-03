@@ -67,4 +67,21 @@ describe('@/components/CommentForm', () => {
     expect(textarea).toHaveValue('');
     expect(screen.getByTitle('4 stars')).not.toBeChecked();
   });
+
+  it('должен блокировать форму при отправке', () => {
+    render(<CommentForm onSubmit={() => {}} isSubmitting />);
+
+    expect(screen.getByRole('textbox')).toBeDisabled();
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('должен отображать ошибку', () => {
+    render(<CommentForm onSubmit={() => {}} error="Test error" />);
+
+    expect(screen.getByTestId('submit-error')).toHaveTextContent('Test error');
+  });
+
+  it('не должен позволять отправить отзыв длиннее 300 символов', () => {
+    // Добавить тест
+  });
 });

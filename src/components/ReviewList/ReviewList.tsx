@@ -13,15 +13,22 @@ interface ReviewListProps {
   onSubmit: (comment: string, rating: number) => void;
   /** Флаг авторизации пользователя */
   isAuthorized: boolean;
+  /** Флаг отправки формы */
+  isSubmitting?: boolean;
+  /** Сообщение об ошибке */
+  submitError?: string;
 }
 
 /**
  * Компонент списка отзывов
- * Отображает список отзывов и форму для добавления нового отзыва
+ * Отображает список отзывов (не более 10) и форму для добавления нового отзыва
+ * Отзывы отсортированы от новых к старым
  */
-const ReviewListComponent = memo(({ reviews, onSubmit, isAuthorized }: ReviewListProps) => {
+const ReviewListComponent = memo(({ reviews, onSubmit, isAuthorized, isSubmitting, submitError }: ReviewListProps) => {
   const sortedReviews = useMemo(() =>
-    [...reviews].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [...reviews]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10), // Ограничиваем количество отзывов до 10
   [reviews]
   );
 
@@ -35,7 +42,13 @@ const ReviewListComponent = memo(({ reviews, onSubmit, isAuthorized }: ReviewLis
           <Review key={review.id} review={review} />
         ))}
       </ul>
-      {isAuthorized && <CommentForm onSubmit={onSubmit} />}
+      {isAuthorized && (
+        <CommentForm
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
+          error={submitError}
+        />
+      )}
     </section>
   );
 });

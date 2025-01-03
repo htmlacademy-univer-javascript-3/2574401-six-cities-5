@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { logout } from '@/store/api-actions';
@@ -8,14 +9,15 @@ import { RootState } from '@/store/root-reducer';
  * Компонент навигации пользователя
  * Отображает информацию о пользователе или ссылку на авторизацию
  */
-const UserNav = () => {
+const UserNavComponent = memo(() => {
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector((state: RootState) => state.user.authorizationStatus);
   const userInfo = useAppSelector((state: RootState) => state.user.userInfo);
   const favoritesLength = useAppSelector((state: RootState) => state.data.favorites.length) ?? 0;
-  const handleLogout = () => {
+
+  const handleLogout = useCallback(() => {
     dispatch(logout());
-  };
+  }, [dispatch]);
 
   if (authStatus !== AuthorizationStatus.Auth) {
     return (
@@ -42,7 +44,6 @@ const UserNav = () => {
       <ul className="header__nav-list">
         <li className="header__nav-item user">
           <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-
             <div className="header__avatar-wrapper user__avatar-wrapper">
               <img
                 src={userInfo?.avatarUrl}
@@ -65,6 +66,8 @@ const UserNav = () => {
       </ul>
     </nav>
   );
-};
+});
 
-export default UserNav;
+UserNavComponent.displayName = 'UserNav';
+
+export default UserNavComponent;

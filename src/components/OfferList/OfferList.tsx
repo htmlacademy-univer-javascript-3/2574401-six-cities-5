@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import { Offer } from 'src/types/offer';
 import OfferCard from '../OfferCard/OfferCard';
 
@@ -18,12 +19,21 @@ interface OfferListProps {
  *
  * @kind component
  */
-const OfferList = ({ offers, onOfferHover }: OfferListProps) => (
-  <div className="cities__places-list places__list tabs__content">
-    {offers.map((offer) => (
+const OfferListComponent = memo(({ offers, onOfferHover }: OfferListProps) => {
+  const offerCards = useMemo(() =>
+    offers.map((offer) => (
       <OfferCard key={offer.id} offer={offer} onCardHover={onOfferHover} />
-    ))}
-  </div>
-);
+    )),
+  [offers, onOfferHover]
+  );
 
-export default OfferList;
+  return (
+    <div className="cities__places-list places__list tabs__content">
+      {offerCards}
+    </div>
+  );
+});
+
+OfferListComponent.displayName = 'OfferList';
+
+export default OfferListComponent;

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { Offer } from '@/types/offer';
 import { Review } from '@/components/Review/types';
 import { RootState } from '../root-reducer';
@@ -107,10 +107,43 @@ export const dataSlice = createSlice({
   }
 });
 
-export const selectOffers = (state: RootState) => state.data.offers;
-export const selectFavorites = (state: RootState) => state.data.favorites;
-export const selectCurrentOffer = (state: RootState) => state.data.currentOffer;
-export const selectNearbyOffers = (state: RootState) => state.data.nearbyOffers;
-export const selectReviews = (state: RootState) => state.data.reviews;
+// Базовые селекторы
+const selectDataState = (state: RootState) => state.data;
+
+// Мемоизированные селекторы
+export const selectOffers = createSelector(
+  [selectDataState],
+  (data) => data.offers
+);
+
+export const selectFavorites = createSelector(
+  [selectDataState],
+  (data) => data.favorites
+);
+
+export const selectCurrentOffer = createSelector(
+  [selectDataState],
+  (data) => data.currentOffer
+);
+
+export const selectNearbyOffers = createSelector(
+  [selectDataState],
+  (data) => data.nearbyOffers
+);
+
+export const selectReviews = createSelector(
+  [selectDataState],
+  (data) => data.reviews
+);
+
+export const selectIsLoading = createSelector(
+  [selectDataState],
+  (data) => data.isLoading
+);
+
+export const selectError = createSelector(
+  [selectDataState],
+  (data) => data.error
+);
 
 export default dataSlice.reducer;

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/hooks/redux';
 import { login } from '@/store/api-actions';
@@ -6,14 +6,14 @@ import { login } from '@/store/api-actions';
 /**
  * Компонент формы авторизации
  */
-const LoginForm = () => {
+const LoginFormComponent = memo(() => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (evt: FormEvent) => {
+  const handleSubmit = useCallback((evt: FormEvent) => {
     evt.preventDefault();
     setError('');
 
@@ -25,7 +25,15 @@ const LoginForm = () => {
       .catch((err: { message: string }) => {
         setError(err.message || 'Произошла ошибка при входе');
       });
-  };
+  }, [dispatch, email, password, navigate]);
+
+  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  }, []);
+
+  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  }, []);
 
   return (
     <form className="login__form form" onSubmit={handleSubmit}>
@@ -43,7 +51,7 @@ const LoginForm = () => {
           placeholder="Email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           data-testid="email"
         />
       </div>
@@ -56,7 +64,7 @@ const LoginForm = () => {
           placeholder="Password"
           required
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           data-testid="password"
         />
       </div>
@@ -68,6 +76,8 @@ const LoginForm = () => {
       </button>
     </form>
   );
-};
+});
 
-export default LoginForm;
+LoginFormComponent.displayName = 'LoginForm';
+
+export default LoginFormComponent;

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, memo, useMemo } from 'react';
 import cn from 'classnames';
 import { SortType } from './types';
 
@@ -15,7 +15,7 @@ interface SortOptionsProps {
 /**
  * Компонент для отображения опций сортировки
  */
-export const SortOptions = ({ currentSort, onSortChange }: SortOptionsProps) => {
+const SortOptionsComponent = memo(({ currentSort, onSortChange }: SortOptionsProps) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleTypeClick = useCallback((type: SortType) => {
@@ -23,13 +23,32 @@ export const SortOptions = ({ currentSort, onSortChange }: SortOptionsProps) => 
     setIsOpened(false);
   }, [onSortChange]);
 
+  const handleToggleOpen = useCallback(() => {
+    setIsOpened((prev) => !prev);
+  }, []);
+
+  const sortOptionsList = useMemo(() =>
+    Object.values(SortType).map((type) => (
+      <li
+        key={type}
+        className={cn(
+          'places__option',
+          {'places__option--active': type === currentSort}
+        )}
+        tabIndex={0}
+        onClick={() => handleTypeClick(type)}
+      >
+        {type}
+      </li>
+    )), [currentSort, handleTypeClick]);
+
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={() => setIsOpened(!isOpened)}
+        onClick={handleToggleOpen}
       >
         {currentSort}
         <svg className="places__sorting-arrow" width="7" height="4">
@@ -42,21 +61,13 @@ export const SortOptions = ({ currentSort, onSortChange }: SortOptionsProps) => 
         {'places__options--opened': isOpened}
       )}
       >
-        {Object.values(SortType).map((type) => (
-          <li
-            key={type}
-            className={cn(
-              'places__option',
-              {'places__option--active': type === currentSort}
-            )}
-            tabIndex={0}
-            onClick={() => handleTypeClick(type)}
-          >
-            {type}
-          </li>
-        ))}
+        {sortOptionsList}
       </ul>
     </form>
   );
-};
+});
+
+SortOptionsComponent.displayName = 'SortOptions';
+
+export const SortOptions = SortOptionsComponent;
 
